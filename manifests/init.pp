@@ -17,21 +17,22 @@ class limits(
   file { [ '/etc/puppet/tmp', $fragments_dir ]:
     ensure  => directory,
     recurse => true,
-    purge   => true,
+    #purge   => true,
     owner   => 'puppet',
     group   => 'puppet',
-    mode    =>  '600',
+    mode    =>  '600';
   }
+
   exec { 'cp_limits':
     command => "/bin/cp ${tmp_limits_conf} ${limits_file}",
     onlyif  => "/bin/cat ${fragments_dir}/* > ${tmp_limits_conf} && ! diff ${tmp_limits_conf} ${limits_file}",
-    require => File[$fragments_dir]
+    require => File[$fragments_dir];
   }
 
   file { $limits_file:
-    owner => 'root',
-    group => 'root',
-    mode => '0644',
-    require => Exec['cp_limits']
+    owner   => 'root',
+    group   => 'root',
+    mode    => '0644',
+    require => Exec['cp_limits'];
   }
 }
